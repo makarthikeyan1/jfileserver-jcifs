@@ -1,0 +1,37 @@
+plugins {
+    id "application"
+}
+
+apply plugin : "java"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://www.filesys.org/maven/"
+    }
+}
+
+ext {
+    javaMainClass = "org.filesys.app.EnterpriseFileServer"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.filesys/jfileserver
+    //implementation 'org.filesys:jfileserver:1.3.11'
+    implementation 'org.filesys:jfileserver-enterprise:1.2.6'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    testImplementation 'org.springframework.integration:spring-integration-smb:1.2.2.RELEASE'
+    testImplementation 'org.springframework.boot:spring-boot-starter-log4j2:2.7.3'
+}
+
+
+test {
+    useJUnitPlatform()
+}
