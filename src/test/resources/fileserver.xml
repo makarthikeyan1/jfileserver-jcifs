@@ -1,0 +1,101 @@
+<?xml version="1.0" standalone="no"?>
+<!-- <!DOCTYPE fileserver SYSTEM "fileserver.dtd"> -->
+
+<fileserver>
+    <servers>
+        <SMB enable="true"/>
+        <FTP enable="false"/>
+        <NFS enable="false"/>
+    </servers>
+
+    <SMB>
+        <host name="JFILESRV" domain="FILESRV">
+            <broadcast>AUTO</broadcast>
+            <smbdialects>SMB2</smbdialects>
+            <comment>Java File Server</comment>
+
+            <!-- Run the server using native SMB -->
+            <!-- On linux, macOS, Unix platforms we use native SMB on a non-privileged port, 1445 -->
+            <tcpipSMB port="1445"/>
+
+            <hostAnnounce interval="5"/>
+        </host>
+        <sessionDebug flags="Negotiate,State,Socket"/>
+
+        <authenticator type="enterprise">
+            <useSPNEGO/>
+            <mode>USER</mode>
+            <NOallowGuest/>
+        </authenticator>
+
+    </SMB>
+
+    <FTP>
+        <port>1121</port>
+        <allowAnonymous/>
+        <debug flags="File,Search,Error,DataPort,Directory"/>
+
+        <!-- Enable FTPS -->
+        <!--
+            <keyStore>PATH-TO-KEYSTORE-FILE</keyStore>
+            <keyStoreType>JKS</keyStoreType>
+            <keyStorePassphrase>KEYSTORE-PASSWORD</keyStorePassphrase>
+
+            <trustStore>PATH-TO-TRUSTSTORE-FILE</trustStore>
+            <trustStoreType>JKS</trustStoreType>
+            <trustStorePassphrase>TRUSTSTORE-PASSWORD</trustStorePassphrase>
+
+            <NOrequireSecureSession/>
+            <NOsslEngineDebug/>
+        -->
+    </FTP>
+
+    <NFS>
+        <enablePortMapper/>
+        <debug flags="File,FileIO"/>
+    </NFS>
+
+    <debug>
+        <output type="Console">
+            <logFile>jfileserver.log</logFile>
+            <append/>
+        </output>
+    </debug>
+
+    <shares>
+        <diskshare name="JFILESHARE" comment="Test shared filesystem">
+            <driver>
+                <class>org.filesys.smb.server.disk.JavaNIODiskDriver</class>
+                <LocalPath>/Users/karthik/dev/data/jfileserver/shares</LocalPath>
+            </driver>
+
+            <notifyDebug/>
+        </diskshare>
+    </shares>
+
+    <security>
+        <JCEProvider>org.bouncycastle.jce.provider.BouncyCastleProvider</JCEProvider>
+<!--        <authenticator>-->
+<!--            <class>org.filesys.server.auth.LocalAuthenticator</class>-->
+<!--            <mode>USER</mode>-->
+<!--            <allowGuest/>-->
+<!--        </authenticator>-->
+
+        <users>
+            <user name="admin">
+                <password>jfilesrv</password>
+                <comment>System administrator</comment>
+                <administrator/>
+            </user>
+            <user name="user">
+                <password>java</password>
+            </user>
+        </users>
+    </security>
+
+    <licence>
+        <licenceKey>
+        </licenceKey>
+    </licence>
+
+</fileserver>
